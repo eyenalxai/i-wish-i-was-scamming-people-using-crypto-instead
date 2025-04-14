@@ -55,23 +55,19 @@ export default function RootLayout({ children }: { children: ReactNode }) {
 					"pl-[calc(var(--my-prefix-safeAreaInsetLeft,0px)+var(--my-prefix-contentSafeAreaInsetLeft))]",
 					"pr-[calc(var(--my-prefix-safeAreaInsetRight,0px)+var(--my-prefix-contentSafeAreaInsetRight))]",
 					"h-[100vh]",
-					"w-full",
-					"border",
-					"border-blue-500"
+					"w-full"
 				)}
 			>
 				<RootScrollArea
 					className={cn(
 						"h-[calc(100vh-var(--my-prefix-safeAreaInsetTop)-var(--my-prefix-contentSafeAreaInsetTop)-var(--my-prefix-safeAreaInsetBottom)-var(--my-prefix-contentSafeAreaInsetBottom)-10px)]",
-						"w-full",
-						"border",
-						"border-green-500"
+						"w-full"
 					)}
 				>
 					<main className={cn("p-4")}>
 						<Providers>{children}</Providers>
 					</main>
-					<div className={cn("h-[600px]")} />
+					<div className={cn("h-[400px]")} />
 				</RootScrollArea>
 			</body>
 		</html>

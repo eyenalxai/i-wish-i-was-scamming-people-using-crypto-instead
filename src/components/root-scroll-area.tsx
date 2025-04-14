@@ -2,7 +2,8 @@
 
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { cn } from "@/lib/utils"
-import { type PropsWithChildren, useEffect, useRef } from "react"
+import { useEffect, useRef } from "react"
+import type { PropsWithChildren } from "react"
 
 export const RootScrollArea = ({
 	children,
@@ -11,47 +12,55 @@ export const RootScrollArea = ({
 	const scrollAreaRef = useRef<HTMLDivElement>(null)
 
 	useEffect(() => {
-		// Function to prevent scroll on document/body
-		const preventScroll = (e: WheelEvent | TouchEvent) => {
-			// Check if the event target is within our ScrollArea
-			const scrollAreaViewport = document.querySelector(
-				"[data-radix-scroll-area-viewport]"
-			)
-			if (!scrollAreaViewport) return
+		const handleScroll = (e: Event) => {
+			const target = e.target as Node
+			const scrollArea = scrollAreaRef.current
 
-			let targetElement = e.target as Node | null
-			let isInsideScrollArea = false
-
-			while (targetElement && !isInsideScrollArea) {
-				if (targetElement === scrollAreaViewport) {
-					isInsideScrollArea = true
-					break
-				}
-				targetElement = targetElement.parentNode
-			}
-
-			// If the event is outside our ScrollArea, prevent scrolling
-			if (!isInsideScrollArea) {
+			if (scrollArea && !scrollArea.contains(target)) {
 				e.preventDefault()
-				e.stopPropagation()
-				return false
 			}
 		}
 
-		// Add event listeners with passive: false to allow preventDefault
-		document.addEventListener("wheel", preventScroll, { passive: false })
-		document.addEventListener("touchmove", preventScroll, { passive: false })
+		const preventKeyboardScroll = (e: KeyboardEvent) => {
+			const scrollKeys = [
+				"ArrowUp",
+				"ArrowDown",
+				"Space",
+				"PageUp",
+				"PageDown",
+				"Home",
+				"End"
+			]
+
+			if (
+				scrollKeys.includes(e.code) &&
+				scrollAreaRef.current &&
+				!scrollAreaRef.current.contains(document.activeElement)
+			) {
+				e.preventDefault()
+			}
+		}
+
+		document.documentElement.scrollTop = 0
+		document.body.scrollTop = 0
+
+		window.addEventListener("wheel", handleScroll, { passive: false })
+		window.addEventListener("touchmove", handleScroll, { passive: false })
+		window.addEventListener("keydown", preventKeyboardScroll)
 
 		return () => {
-			// Cleanup
-			document.removeEventListener("wheel", preventScroll)
-			document.removeEventListener("touchmove", preventScroll)
+			window.removeEventListener("wheel", handleScroll)
+			window.removeEventListener("touchmove", handleScroll)
+			window.removeEventListener("keydown", preventKeyboardScroll)
 		}
 	}, [])
 
 	return (
-		<div ref={scrollAreaRef}>
-			<ScrollArea className={cn(className)}>{children}</ScrollArea>
-		</div>
+		<ScrollArea
+			ref={scrollAreaRef}
+			className={cn("root-scroll-area", className)}
+		>
+			{children}
+		</ScrollArea>
 	)
 }
