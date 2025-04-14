@@ -10,18 +10,28 @@ export const RootScrollArea = ({
 	className
 }: PropsWithChildren<{ className?: string }>) => {
 	const viewportRef = useRef<HTMLDivElement>(null)
+	const scrollPosition = useRef({ top: 0, left: 0 })
 
 	useEffect(() => {
-		// Lock body scroll by default
-		document.body.style.overflow = "hidden"
-		document.documentElement.style.overflow = "hidden"
-
 		const viewport = viewportRef.current
 		if (!viewport) return
 
-		const handleTouchStart = (e: TouchEvent) => {
-			// Allow touch events to propagate to the scroll area
-			e.stopPropagation()
+		// Store initial scroll position
+		scrollPosition.current = {
+			top: window.scrollY,
+			left: window.scrollX
+		}
+
+		const handleScroll = (e: Event) => {
+			// Prevent any scroll on window
+			window.scrollTo(scrollPosition.current.left, scrollPosition.current.top)
+		}
+
+		const handleTouchMove = (e: TouchEvent) => {
+			// Only allow touch events within the scroll area
+			if (!viewport.contains(e.target as Node)) {
+				e.preventDefault()
+			}
 		}
 
 		const handleWheel = (e: WheelEvent) => {
@@ -36,32 +46,20 @@ export const RootScrollArea = ({
 			}
 		}
 
-		viewport.addEventListener("touchstart", handleTouchStart, {
-			passive: false
-		})
+		// Use passive: false for reliable prevention
+		window.addEventListener("scroll", handleScroll, { passive: false })
+		document.addEventListener("touchmove", handleTouchMove, { passive: false })
 		viewport.addEventListener("wheel", handleWheel, { passive: false })
 
 		return () => {
-			viewport.removeEventListener("touchstart", handleTouchStart)
+			window.removeEventListener("scroll", handleScroll)
+			document.removeEventListener("touchmove", handleTouchMove)
 			viewport.removeEventListener("wheel", handleWheel)
-			document.body.style.overflow = ""
-			document.documentElement.style.overflow = ""
 		}
 	}, [])
 
 	return (
-		<ScrollArea
-			className={cn(className)}
-			ref={viewportRef}
-			onPointerDownCapture={(e) => {
-				// Allow native scroll when interacting with ScrollArea
-				document.body.style.overflow = "auto"
-			}}
-			onPointerLeave={() => {
-				// Re-lock when leaving ScrollArea
-				document.body.style.overflow = "hidden"
-			}}
-		>
+		<ScrollArea className={cn(className)} ref={viewportRef}>
 			{children}
 		</ScrollArea>
 	)
