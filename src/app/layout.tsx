@@ -58,12 +58,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
 					"w-full"
 				)}
 			>
-				<RootScrollArea
-					className={cn(
-						"h-[calc(100vh-var(--my-prefix-safeAreaInsetTop)-var(--my-prefix-contentSafeAreaInsetTop)-var(--my-prefix-safeAreaInsetBottom)-var(--my-prefix-contentSafeAreaInsetBottom)-10px)]",
-						"w-full"
-					)}
-				>
+				<RootScrollArea>
 					<main className={cn("p-4")}>
 						<Providers>{children}</Providers>
 					</main>
