@@ -16,12 +16,7 @@ export const TelegramSDKProvider = ({ children }: PropsWithChildren) => {
 					await viewport.mount()
 
 					if (viewport.bindCssVars.isAvailable()) {
-						viewport.bindCssVars((key) => {
-							console.log("key", key)
-							const result = `--${CSS_VAR_PREFIX}-${key}`
-							console.log("result", result)
-							return result
-						})
+						viewport.bindCssVars((key) => `--${CSS_VAR_PREFIX}-${key}`)
 					}
 
 					if (viewport.expand.isAvailable()) {
