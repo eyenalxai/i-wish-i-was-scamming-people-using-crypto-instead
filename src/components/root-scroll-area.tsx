@@ -10,8 +10,26 @@ export const RootScrollArea = ({ children }: PropsWithChildren) => {
 	const isHandlingFocus = useRef(false)
 	const viewportRef = useRef<HTMLDivElement>(null)
 	const [hasFocusedElement, setHasFocusedElement] = useState(false)
+	const previousActiveElement = useRef<Element | null>(null)
+	const wasInputFocused = useRef(false)
 
 	useEffect(() => {
+		const trackActiveElement = () => {
+			previousActiveElement.current = document.activeElement
+		}
+
+		const handleBlur = (event: FocusEvent) => {
+			setTimeout(() => {
+				if (document.activeElement?.tagName !== "INPUT") {
+					wasInputFocused.current = false
+				}
+			}, 0)
+		}
+
+		trackActiveElement()
+		document.addEventListener("focusin", trackActiveElement)
+		document.addEventListener("blur", handleBlur, true)
+
 		const handleFocusIn = (event: FocusEvent) => {
 			const target = event.target as HTMLElement
 
@@ -23,9 +41,25 @@ export const RootScrollArea = ({ children }: PropsWithChildren) => {
 				return
 			}
 
+			const shouldDoDirectTransfer = wasInputFocused.current
+
+			wasInputFocused.current = true
+
+			if (shouldDoDirectTransfer) {
+				setHasFocusedElement(true)
+
+				const handleElementBlur = () => {
+					setHasFocusedElement(false)
+					target.removeEventListener("blur", handleElementBlur)
+				}
+				target.addEventListener("blur", handleElementBlur)
+
+				return
+			}
+
 			isHandlingFocus.current = true
 			lastFocusedElement.current = target
-			setHasFocusedElement(true) // Set focus state to true
+			setHasFocusedElement(true)
 
 			event.preventDefault()
 			event.stopImmediatePropagation()
@@ -58,7 +92,6 @@ export const RootScrollArea = ({ children }: PropsWithChildren) => {
 						document.removeEventListener("focusin", handleFocusIn, true)
 						targetElement.focus({ preventScroll: true })
 
-						// Add focus event listener directly to the element
 						const handleElementBlur = () => {
 							setHasFocusedElement(false)
 							targetElement.removeEventListener("blur", handleElementBlur)
@@ -78,6 +111,8 @@ export const RootScrollArea = ({ children }: PropsWithChildren) => {
 
 		return () => {
 			document.removeEventListener("focusin", handleFocusIn, true)
+			document.removeEventListener("focusin", trackActiveElement)
+			document.removeEventListener("blur", handleBlur, true)
 		}
 	}, [])
 
