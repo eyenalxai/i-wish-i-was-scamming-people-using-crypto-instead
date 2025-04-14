@@ -34,7 +34,16 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: ReactNode }) {
 	return (
-		<html lang="en" suppressHydrationWarning>
+		<html
+			lang="en"
+			suppressHydrationWarning
+			className={cn(
+				"scroll-pt-[calc(var(--my-prefix-safeAreaInsetTop)+var(--my-prefix-contentSafeAreaInsetTop))]",
+				"scroll-pb-[calc(var(--my-prefix-safeAreaInsetBottom)+var(--my-prefix-contentSafeAreaInsetBottom))]",
+				"scroll-pl-[calc(var(--my-prefix-safeAreaInsetLeft)+var(--my-prefix-contentSafeAreaInsetLeft))]",
+				"scroll-pr-[calc(var(--my-prefix-safeAreaInsetRight)+var(--my-prefix-contentSafeAreaInsetRight))]"
+			)}
+		>
 			<body
 				className={cn(
 					"font-sans",
@@ -45,20 +54,25 @@ export default function RootLayout({ children }: { children: ReactNode }) {
 					"pb-[calc(var(--my-prefix-safeAreaInsetBottom,0px)+var(--my-prefix-contentSafeAreaInsetBottom))]",
 					"pl-[calc(var(--my-prefix-safeAreaInsetLeft,0px)+var(--my-prefix-contentSafeAreaInsetLeft))]",
 					"pr-[calc(var(--my-prefix-safeAreaInsetRight,0px)+var(--my-prefix-contentSafeAreaInsetRight))]",
-					"h-[var(--my-prefix-stableHeight)]",
-					"w-full"
+					"h-[100vh]",
+					"w-full",
+					"border",
+					"border-blue-500"
 				)}
 			>
-				<div className={cn("border", "border-blue-500")}>
-					<RootScrollArea className={cn("h-[600px]", "w-full")}>
-						<main className={cn("p-4")}>
-							<div className={cn("border", "border-red-500")}>
-								<Providers>{children}</Providers>
-								<div className={cn("h-[300px]")} />
-							</div>
-						</main>
-					</RootScrollArea>
-				</div>
+				<RootScrollArea
+					className={cn(
+						"h-[calc(var(--my-prefix-stableHeight)-var(--my-prefix-safeAreaInsetTop)-var(--my-prefix-contentSafeAreaInsetTop)-var(--my-prefix-safeAreaInsetBottom)-var(--my-prefix-contentSafeAreaInsetBottom)-10px)]",
+						"w-full",
+						"border",
+						"border-green-500"
+					)}
+				>
+					<main className={cn("p-4")}>
+						<Providers>{children}</Providers>
+						<div className={cn("h-[300px]")} />
+					</main>
+				</RootScrollArea>
 			</body>
 		</html>
 	)

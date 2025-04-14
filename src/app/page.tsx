@@ -9,6 +9,14 @@ export default function Page() {
 	return (
 		<div>
 			<Button
+				className={cn(
+					"fixed",
+					"left-1/2",
+					"-translate-x-1/2",
+					"top-8",
+					"border",
+					"border-orange-500"
+				)}
 				onClick={() => {
 					if (viewport.requestFullscreen.isAvailable()) {
 						if (viewport.isFullscreen()) {
