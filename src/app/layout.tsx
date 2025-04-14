@@ -70,8 +70,8 @@ export default function RootLayout({ children }: { children: ReactNode }) {
 				>
 					<main className={cn("p-4")}>
 						<Providers>{children}</Providers>
-						<div className={cn("h-[600px]")} />
 					</main>
+					<div className={cn("h-[600px]")} />
 				</RootScrollArea>
 			</body>
 		</html>

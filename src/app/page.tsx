@@ -9,10 +9,7 @@ export default function Page() {
 	return (
 		<div>
 			<Button
-				className={cn(
-					"border",
-					"border-orange-500"
-				)}
+				className={cn("border", "border-orange-500")}
 				onClick={() => {
 					if (viewport.requestFullscreen.isAvailable()) {
 						if (viewport.isFullscreen()) {

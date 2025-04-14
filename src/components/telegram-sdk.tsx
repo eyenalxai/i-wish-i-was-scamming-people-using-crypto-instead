@@ -11,7 +11,7 @@ export const TelegramSDKProvider = ({ children }: PropsWithChildren) => {
 		init()
 
 		const mountViewport = async () => {
-			if (viewport.mount.isAvailable()) {
+			if (viewport.mount.isAvailable() && !viewport.isMounted()) {
 				try {
 					await viewport.mount()
 
