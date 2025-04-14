@@ -1,7 +1,7 @@
 "use client"
 
 import { useClientOnce } from "@/lib/use-client-once"
-import { init, viewport } from "@telegram-apps/sdk-react"
+import { init, swipeBehavior, viewport } from "@telegram-apps/sdk-react"
 import type { PropsWithChildren } from "react"
 
 export const TelegramSDKProvider = ({ children }: PropsWithChildren) => {
@@ -15,6 +15,15 @@ export const TelegramSDKProvider = ({ children }: PropsWithChildren) => {
 
 					if (viewport.bindCssVars.isAvailable()) {
 						viewport.bindCssVars()
+					}
+
+					if (viewport.expand.isAvailable()) {
+						viewport.expand()
+					}
+
+					if (swipeBehavior.mount.isAvailable()) {
+						swipeBehavior.mount()
+						swipeBehavior.disableVertical()
 					}
 				} catch (err) {
 					console.error("Failed to mount viewport:", err)

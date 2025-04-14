@@ -38,7 +38,17 @@ export default function RootLayout({ children }: { children: ReactNode }) {
 					"font-sans",
 					"antialiased",
 					GeistSans.variable,
-					GeistMono.variable
+					GeistMono.variable,
+					"pt-[calc(var(--tg-viewport-safe-area-inset-top,0px)+var(--tg-viewport-content-safe-area-inset-top))]",
+					"pb-[calc(var(--tg-viewport-safe-area-inset-bottom,0px)+var(--tg-viewport-content-safe-area-inset-bottom))]",
+					"pl-[calc(var(--tg-viewport-safe-area-inset-left,0px)+var(--tg-viewport-content-safe-area-inset-left))]",
+					"pr-[calc(var(--tg-viewport-safe-area-inset-right,0px)+var(--tg-viewport-content-safe-area-inset-right))]",
+					"h-[var(--tg-viewport-stable-height)]",
+					"w-[var(--tg-viewport-width)]",
+					"overflow-hidden",
+					"fixed",
+					"border",
+					"border-red-500"
 				)}
 			>
 				<Providers>{children}</Providers>
