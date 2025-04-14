@@ -2,13 +2,14 @@
 
 import { cn } from "@/lib/utils"
 import * as ScrollAreaPrimitive from "@radix-ui/react-scroll-area"
-import { type PropsWithChildren, useEffect, useRef } from "react"
+import { type PropsWithChildren, useEffect, useRef, useState } from "react"
 
 export const RootScrollArea = ({ children }: PropsWithChildren) => {
 	const fakeInputRef = useRef<HTMLInputElement>(null)
 	const lastFocusedElement = useRef<HTMLElement | null>(null)
 	const isHandlingFocus = useRef(false)
 	const viewportRef = useRef<HTMLDivElement>(null)
+	const [hasFocusedElement, setHasFocusedElement] = useState(false)
 
 	useEffect(() => {
 		const handleFocusIn = (event: FocusEvent) => {
@@ -24,6 +25,7 @@ export const RootScrollArea = ({ children }: PropsWithChildren) => {
 
 			isHandlingFocus.current = true
 			lastFocusedElement.current = target
+			setHasFocusedElement(true) // Set focus state to true
 
 			event.preventDefault()
 			event.stopImmediatePropagation()
@@ -52,18 +54,24 @@ export const RootScrollArea = ({ children }: PropsWithChildren) => {
 						behavior: "smooth"
 					})
 
-					// Restore focus after scroll
 					setTimeout(() => {
 						document.removeEventListener("focusin", handleFocusIn, true)
 						targetElement.focus({ preventScroll: true })
+
+						// Add focus event listener directly to the element
+						const handleElementBlur = () => {
+							setHasFocusedElement(false)
+							targetElement.removeEventListener("blur", handleElementBlur)
+						}
+						targetElement.addEventListener("blur", handleElementBlur)
 
 						setTimeout(() => {
 							document.addEventListener("focusin", handleFocusIn, true)
 							isHandlingFocus.current = false
 						}, 50)
-					}, 500)
+					}, 250)
 				}
-			}, 10)
+			}, 250)
 		}
 
 		document.addEventListener("focusin", handleFocusIn, true)
@@ -100,6 +108,12 @@ export const RootScrollArea = ({ children }: PropsWithChildren) => {
 					tabIndex={-1}
 				/>
 				{children}
+				<div
+					className={cn(
+						"transition-all duration-100 overflow-hidden",
+						hasFocusedElement ? "h-[400px]" : "h-[1px]"
+					)}
+				/>
 			</ScrollAreaPrimitive.Viewport>
 			<ScrollAreaPrimitive.Scrollbar
 				orientation="vertical"

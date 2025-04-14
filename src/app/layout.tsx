@@ -62,7 +62,6 @@ export default function RootLayout({ children }: { children: ReactNode }) {
 					<main className={cn("p-4")}>
 						<Providers>{children}</Providers>
 					</main>
-					<div className={cn("h-[400px]")} />
 				</RootScrollArea>
 			</body>
 		</html>
