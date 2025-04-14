@@ -4,6 +4,8 @@ import { useClientOnce } from "@/lib/use-client-once"
 import { init, swipeBehavior, viewport } from "@telegram-apps/sdk-react"
 import type { PropsWithChildren } from "react"
 
+const CSS_VAR_PREFIX = "my-prefix"
+
 export const TelegramSDKProvider = ({ children }: PropsWithChildren) => {
 	useClientOnce(() => {
 		init()
@@ -14,7 +16,12 @@ export const TelegramSDKProvider = ({ children }: PropsWithChildren) => {
 					await viewport.mount()
 
 					if (viewport.bindCssVars.isAvailable()) {
-						viewport.bindCssVars()
+						viewport.bindCssVars((key) => {
+							console.log("key", key)
+							const result = `--${CSS_VAR_PREFIX}-${key}`
+							console.log("result", result)
+							return result
+						})
 					}
 
 					if (viewport.expand.isAvailable()) {

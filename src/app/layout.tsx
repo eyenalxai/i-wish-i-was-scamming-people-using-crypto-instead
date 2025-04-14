@@ -1,5 +1,6 @@
 import "./globals.css"
 import { Providers } from "@/components/providers"
+import { ScrollArea } from "@/components/ui/scroll-area"
 import { cn } from "@/lib/utils"
 import { GeistMono } from "geist/font/mono"
 import { GeistSans } from "geist/font/sans"
@@ -24,6 +25,7 @@ export const viewport: Viewport = {
 	initialScale: 1,
 	maximumScale: 1,
 	userScalable: false,
+	interactiveWidget: "resizes-visual",
 	themeColor: [
 		{ media: "(prefers-color-scheme: light)", color: "0 0% 100%" },
 		{ media: "(prefers-color-scheme: dark)", color: "222.2 84% 4.9%" }
@@ -39,19 +41,27 @@ export default function RootLayout({ children }: { children: ReactNode }) {
 					"antialiased",
 					GeistSans.variable,
 					GeistMono.variable,
-					"pt-[calc(var(--tg-viewport-safe-area-inset-top,0px)+var(--tg-viewport-content-safe-area-inset-top))]",
-					"pb-[calc(var(--tg-viewport-safe-area-inset-bottom,0px)+var(--tg-viewport-content-safe-area-inset-bottom))]",
-					"pl-[calc(var(--tg-viewport-safe-area-inset-left,0px)+var(--tg-viewport-content-safe-area-inset-left))]",
-					"pr-[calc(var(--tg-viewport-safe-area-inset-right,0px)+var(--tg-viewport-content-safe-area-inset-right))]",
-					"h-[var(--tg-viewport-stable-height)]",
-					"w-[var(--tg-viewport-width)]",
-					"overflow-hidden",
-					"fixed",
-					"border",
-					"border-red-500"
+					"pt-[calc(var(--my-prefix-safeAreaInsetTop,0px)+var(--my-prefix-contentSafeAreaInsetTop))]",
+					"pb-[calc(var(--my-prefix-safeAreaInsetBottom,0px)+var(--my-prefix-contentSafeAreaInsetBottom))]",
+					"pl-[calc(var(--my-prefix-safeAreaInsetLeft,0px)+var(--my-prefix-contentSafeAreaInsetLeft))]",
+					"pr-[calc(var(--my-prefix-safeAreaInsetRight,0px)+var(--my-prefix-contentSafeAreaInsetRight))]",
+					"h-[var(--my-prefix-stableHeight)]",
+					"w-full"
 				)}
 			>
-				<Providers>{children}</Providers>
+				<main className={cn("border", "border-blue-500", "p-4")}>
+					<ScrollArea
+						className={cn(
+							"h-[calc(var(--my-prefix-stableHeight)-var(--my-prefix-safeAreaInsetTop)-var(--my-prefix-contentSafeAreaInsetTop)-var(--my-prefix-safeAreaInsetBottom)-var(--my-prefix-contentSafeAreaInsetBottom))]",
+							"w-[--my-prefix-width]",
+							"border",
+							"border-red-500"
+						)}
+					>
+						<Providers>{children}</Providers>
+						<div className={cn("h-[300px]")} />
+					</ScrollArea>
+				</main>
 			</body>
 		</html>
 	)
