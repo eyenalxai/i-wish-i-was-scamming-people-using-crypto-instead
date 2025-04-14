@@ -1,6 +1,6 @@
 import "./globals.css"
 import { Providers } from "@/components/providers"
-import { ScrollArea } from "@/components/ui/scroll-area"
+import { RootScrollArea } from "@/components/root-scroll-area"
 import { cn } from "@/lib/utils"
 import { GeistMono } from "geist/font/mono"
 import { GeistSans } from "geist/font/sans"
@@ -49,19 +49,16 @@ export default function RootLayout({ children }: { children: ReactNode }) {
 					"w-full"
 				)}
 			>
-				<main className={cn("border", "border-blue-500", "p-4")}>
-					<ScrollArea
-						className={cn(
-							"h-[calc(var(--my-prefix-stableHeight)-var(--my-prefix-safeAreaInsetTop)-var(--my-prefix-contentSafeAreaInsetTop)-var(--my-prefix-safeAreaInsetBottom)-var(--my-prefix-contentSafeAreaInsetBottom))]",
-							"w-[--my-prefix-width]",
-							"border",
-							"border-red-500"
-						)}
-					>
-						<Providers>{children}</Providers>
-						<div className={cn("h-[300px]")} />
-					</ScrollArea>
-				</main>
+				<div className={cn("border", "border-blue-500")}>
+					<RootScrollArea className={cn("h-[600px]", "w-full")}>
+						<main className={cn("p-4")}>
+							<div className={cn("border", "border-red-500")}>
+								<Providers>{children}</Providers>
+								<div className={cn("h-[300px]")} />
+							</div>
+						</main>
+					</RootScrollArea>
+				</div>
 			</body>
 		</html>
 	)
