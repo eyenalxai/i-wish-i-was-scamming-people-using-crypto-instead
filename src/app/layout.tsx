@@ -55,7 +55,8 @@ export default function RootLayout({ children }: { children: ReactNode }) {
 					"pl-[calc(var(--my-prefix-safeAreaInsetLeft,0px)+var(--my-prefix-contentSafeAreaInsetLeft))]",
 					"pr-[calc(var(--my-prefix-safeAreaInsetRight,0px)+var(--my-prefix-contentSafeAreaInsetRight))]",
 					"h-[100vh]",
-					"w-full"
+					"w-full",
+					"overflow-hidden"
 				)}
 			>
 				<RootScrollArea>

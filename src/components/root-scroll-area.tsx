@@ -71,7 +71,7 @@ export const RootScrollArea = ({ children }: PropsWithChildren) => {
 						}, 50)
 					}, 250)
 				}
-			}, 250)
+			}, 150)
 		}
 
 		document.addEventListener("focusin", handleFocusIn, true)
@@ -85,7 +85,7 @@ export const RootScrollArea = ({ children }: PropsWithChildren) => {
 		<ScrollAreaPrimitive.Root
 			className={cn(
 				"relative",
-				"h-[calc(100vh-var(--my-prefix-safeAreaInsetTop)-var(--my-prefix-contentSafeAreaInsetTop)-var(--my-prefix-safeAreaInsetBottom)-var(--my-prefix-contentSafeAreaInsetBottom)-10px)]"
+				"h-[calc(100vh-var(--my-prefix-safeAreaInsetTop)-var(--my-prefix-contentSafeAreaInsetTop)-var(--my-prefix-safeAreaInsetBottom)-var(--my-prefix-contentSafeAreaInsetBottom)-20px)]"
 			)}
 		>
 			<ScrollAreaPrimitive.Viewport
