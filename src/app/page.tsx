@@ -1,30 +1,21 @@
 "use client"
 
-import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
 import { cn } from "@/lib/utils"
-import { viewport } from "@telegram-apps/sdk-react"
 
 export default function Page() {
-	return (
-		<div>
-			<Button
-				className={cn("border", "border-orange-500")}
-				onClick={() => {
-					if (viewport.requestFullscreen.isAvailable()) {
-						if (viewport.isFullscreen()) {
-							viewport.exitFullscreen()
-							return
-						}
+	// Array of 20 numbers from 0 to 19
+	const numbers = Array.from({ length: 20 }, (_, i) => i)
 
-						viewport.requestFullscreen()
-					}
-				}}
-			>
-				Toggle Fullscreen
-			</Button>
-			<div className={cn("h-[600px]", "bg-red-100")} />
-			<Input />
+	return (
+		<div className={cn("space-y-6")}>
+			{numbers.map((number) => (
+				<div key={number} className={cn("space-y-2")}>
+					<Label>Input {number}</Label>
+					<Input placeholder={`Input ${number}`} />
+				</div>
+			))}
 		</div>
 	)
 }
