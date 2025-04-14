@@ -10,10 +10,6 @@ export default function Page() {
 		<div>
 			<Button
 				className={cn(
-					"fixed",
-					"left-1/2",
-					"-translate-x-1/2",
-					"top-8",
 					"border",
 					"border-orange-500"
 				)}
