@@ -13,6 +13,10 @@ export const TelegramSDKProvider = ({ children }: PropsWithChildren) => {
 				try {
 					await viewport.mount()
 
+					if (viewport.requestFullscreen.isAvailable()) {
+						viewport.requestFullscreen()
+					}
+
 					if (viewport.bindCssVars.isAvailable()) {
 						viewport.bindCssVars()
 					}
