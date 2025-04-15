@@ -69,9 +69,9 @@ export const RootScrollArea = ({ children }: PropsWithChildren) => {
 							document.addEventListener("focusin", handleFocusIn, true)
 							isHandlingFocus.current = false
 						}, 50)
-					}, 250)
+					}, 300)
 				}
-			}, 150)
+			}, 300)
 		}
 
 		document.addEventListener("focusin", handleFocusIn, true)
@@ -110,7 +110,7 @@ export const RootScrollArea = ({ children }: PropsWithChildren) => {
 				{children}
 				<div
 					className={cn(
-						"transition-all duration-100 overflow-hidden",
+						"transition-all duration-500 ease-in-out overflow-hidden",
 						hasFocusedElement ? "h-[400px]" : "h-[1px]"
 					)}
 				/>
