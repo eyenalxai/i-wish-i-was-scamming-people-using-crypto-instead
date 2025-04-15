@@ -2,13 +2,7 @@
 
 import { cn } from "@/lib/utils"
 import * as ScrollAreaPrimitive from "@radix-ui/react-scroll-area"
-import {
-	type PropsWithChildren,
-	useCallback,
-	useEffect,
-	useRef,
-	useState
-} from "react"
+import { type PropsWithChildren, useEffect, useRef, useState } from "react"
 
 export const RootScrollArea = ({ children }: PropsWithChildren) => {
 	const fakeInputRef = useRef<HTMLInputElement>(null)
@@ -16,25 +10,6 @@ export const RootScrollArea = ({ children }: PropsWithChildren) => {
 	const isHandlingFocus = useRef(false)
 	const viewportRef = useRef<HTMLDivElement>(null)
 	const [hasFocusedElement, setHasFocusedElement] = useState(false)
-
-	const scrollInputIntoView = useCallback((target: HTMLElement) => {
-		if (!viewportRef.current) return
-
-		const targetRect = target.getBoundingClientRect()
-		const viewportRect = viewportRef.current.getBoundingClientRect()
-
-		const scrollTo =
-			targetRect.top -
-			viewportRect.top -
-			viewportRect.height / 2 +
-			targetRect.height / 2 +
-			viewportRef.current.scrollTop
-
-		viewportRef.current.scrollTo({
-			top: scrollTo,
-			behavior: "smooth"
-		})
-	}, [])
 
 	useEffect(() => {
 		const handleFocusIn = (event: FocusEvent) => {
@@ -48,47 +23,55 @@ export const RootScrollArea = ({ children }: PropsWithChildren) => {
 				return
 			}
 
-			// Check if we're switching between inputs within our scroll area
-			const isSwitchingBetweenInputs =
-				lastFocusedElement.current?.tagName === "INPUT" &&
-				viewportRef.current?.contains(lastFocusedElement.current)
-
 			isHandlingFocus.current = true
-			setHasFocusedElement(true)
+			lastFocusedElement.current = target
+			setHasFocusedElement(true) // Set focus state to true
 
-			if (isSwitchingBetweenInputs) {
-				// Direct scroll without fake input dance
-				scrollInputIntoView(target)
-				lastFocusedElement.current = target
-				isHandlingFocus.current = false
-			} else {
-				// Full fake input dance for focus from outside
-				event.preventDefault()
-				event.stopImmediatePropagation()
+			event.preventDefault()
+			event.stopImmediatePropagation()
 
-				lastFocusedElement.current = target
-				fakeInputRef.current?.focus({ preventScroll: true })
+			if (fakeInputRef.current) {
+				fakeInputRef.current.focus({ preventScroll: true })
+			}
 
-				setTimeout(() => {
-					scrollInputIntoView(target)
+			setTimeout(() => {
+				if (lastFocusedElement.current && viewportRef.current) {
+					const targetElement = lastFocusedElement.current
+					const viewport = viewportRef.current
+
+					const targetRect = targetElement.getBoundingClientRect()
+					const viewportRect = viewport.getBoundingClientRect()
+
+					const scrollTo =
+						targetRect.top -
+						viewportRect.top -
+						viewportRect.height / 2 +
+						targetRect.height / 2 +
+						viewport.scrollTop
+
+					viewport.scrollTo({
+						top: scrollTo,
+						behavior: "smooth"
+					})
 
 					setTimeout(() => {
 						document.removeEventListener("focusin", handleFocusIn, true)
-						target.focus({ preventScroll: true })
+						targetElement.focus({ preventScroll: true })
 
+						// Add focus event listener directly to the element
 						const handleElementBlur = () => {
 							setHasFocusedElement(false)
-							target.removeEventListener("blur", handleElementBlur)
+							targetElement.removeEventListener("blur", handleElementBlur)
 						}
-						target.addEventListener("blur", handleElementBlur)
+						targetElement.addEventListener("blur", handleElementBlur)
 
 						setTimeout(() => {
 							document.addEventListener("focusin", handleFocusIn, true)
 							isHandlingFocus.current = false
 						}, 50)
 					}, 250)
-				}, 150)
-			}
+				}
+			}, 150)
 		}
 
 		document.addEventListener("focusin", handleFocusIn, true)
@@ -96,7 +79,7 @@ export const RootScrollArea = ({ children }: PropsWithChildren) => {
 		return () => {
 			document.removeEventListener("focusin", handleFocusIn, true)
 		}
-	}, [scrollInputIntoView])
+	}, [])
 
 	return (
 		<ScrollAreaPrimitive.Root
