@@ -48,7 +48,6 @@ export const RootScrollArea = ({ children }: PropsWithChildren) => {
 				return
 			}
 
-			// Check if we're switching between inputs within our scroll area
 			const isSwitchingBetweenInputs =
 				lastFocusedElement.current?.tagName === "INPUT" &&
 				viewportRef.current?.contains(lastFocusedElement.current)
@@ -57,12 +56,10 @@ export const RootScrollArea = ({ children }: PropsWithChildren) => {
 			setHasFocusedElement(true)
 
 			if (isSwitchingBetweenInputs) {
-				// Direct scroll without fake input dance
 				scrollInputIntoView(target)
 				lastFocusedElement.current = target
 				isHandlingFocus.current = false
 			} else {
-				// Full fake input dance for focus from outside
 				event.preventDefault()
 				event.stopImmediatePropagation()
 
